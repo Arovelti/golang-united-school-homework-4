@@ -5,7 +5,6 @@ package string_sum
 import (
 	"errors"
 	"fmt"
-	"regexp"
 	"strconv"
 	"strings"
 )
@@ -16,9 +15,7 @@ var (
 	errorEmptyInput = errors.New("input is empty")
 	// Use when the expression has number of operands not equal to two
 	errorNotTwoOperands = errors.New("expecting two operands, but received more or less")
-
-	errorHasLetter   = errors.New("got letter")
-	errFailToConvert = errors.New("fail to convert")
+	errorHasLetter      = errors.New("got letter")
 )
 
 // Implement a function that computes the sum of two int numbers written as a string
@@ -46,26 +43,27 @@ func StringSum(input string) (output string, err error) {
 		}
 	}
 
-	var sum, count int
-
-	re := regexp.MustCompile(`[-]?\d[\d,]*[\.]?[\d{2}]*`)
-
-	for _, n := range re.FindAllString(input, -1) {
-		num, err := strconv.Atoi(n)
-		if err != nil {
-			err = fmt.Errorf("%w", errFailToConvert)
-			return "", err
-		}
-		count++
-		sum += num
+	operands := strings.Fields(input)
+	if len(operands) != 2 {
+		err = fmt.Errorf("error: %w", errorNotTwoOperands)
+		return
 	}
 
-	if count != 2 {
-		return "", fmt.Errorf("an incredible number of operands, %w", errorNotTwoOperands)
+	firstOperand, firstErr := strconv.Atoi(operands[0])
+	if firstErr != nil {
+		err = fmt.Errorf("error: %w", firstErr)
+		return
 	}
 
-	output = strconv.Itoa(sum)
-	return output, nil
+	secondOperand, SecondErr := strconv.Atoi(operands[1])
+	if SecondErr != nil {
+		err = fmt.Errorf("error: %w", SecondErr)
+		return
+	}
+
+	output = strconv.Itoa(firstOperand + secondOperand)
+	err = nil
+	return
 }
 
 // func main() {
