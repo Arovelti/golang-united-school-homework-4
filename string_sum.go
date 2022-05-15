@@ -17,6 +17,7 @@ var (
 	// Use when the expression has number of operands not equal to two
 	errorNotTwoOperands = errors.New("expecting two operands, but received more or less")
 	errSomeNewError     = errors.New("something go wrong")
+	errorHasLetter      = errors.New("got letter")
 )
 
 // Implement a function that computes the sum of two int numbers written as a string
@@ -30,8 +31,18 @@ var (
 // Use the errors defined above as described, again wrapping into fmt.Errorf
 
 func StringSum(input string) (output string, err error) {
+	input = strings.ReplaceAll(input, " ", "")
+	input = strings.ReplaceAll(input, "+", " ")
+	input = strings.ReplaceAll(input, "-", " -")
+
 	if input == "" || len(strings.TrimSpace(input)) == 0 {
 		return "", fmt.Errorf("empty input, %w", errorEmptyInput)
+	}
+
+	for _, v := range input {
+		if !strings.Contains("0123456789+- ", string(v)) {
+			return "", fmt.Errorf("maybe it contains letter or symbol: %w", errorHasLetter)
+		}
 	}
 
 	var sum, count int
@@ -56,7 +67,7 @@ func StringSum(input string) (output string, err error) {
 }
 
 // func main() {
-// 	a := "-55+-33"
+// 	a := "-f55+-33"
 // 	fmt.Println(StringSum(a))
 // 	fmt.Println(a)
 // }
