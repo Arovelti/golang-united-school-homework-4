@@ -16,8 +16,9 @@ var (
 	errorEmptyInput = errors.New("input is empty")
 	// Use when the expression has number of operands not equal to two
 	errorNotTwoOperands = errors.New("expecting two operands, but received more or less")
-	errSomeNewError     = errors.New("something go wrong")
-	errorHasLetter      = errors.New("got letter")
+
+	errorHasLetter   = errors.New("got letter")
+	errFailToConvert = errors.New("fail to convert")
 )
 
 // Implement a function that computes the sum of two int numbers written as a string
@@ -52,7 +53,8 @@ func StringSum(input string) (output string, err error) {
 	for _, n := range re.FindAllString(input, -1) {
 		num, err := strconv.Atoi(n)
 		if err != nil {
-			return "", fmt.Errorf("some unexpecting error, %w", errSomeNewError)
+			err = fmt.Errorf("%w", errFailToConvert)
+			return "", err
 		}
 		count++
 		sum += num
