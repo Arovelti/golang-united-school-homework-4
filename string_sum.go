@@ -36,16 +36,17 @@ func StringSum(input string) (output string, err error) {
 
 	var sum, count int
 
-	re := regexp.MustCompile("[0-9]+")
+	re := regexp.MustCompile(`[-]?\d[\d,]*[\.]?[\d{2}]*`)
 
 	for _, n := range re.FindAllString(input, -1) {
 		num, err := strconv.Atoi(n)
 		if err != nil {
 			return "", fmt.Errorf("some unexpecting error, %w", errSomeNewError)
 		}
-		sum += num
 		count++
+		sum += num
 	}
+
 	if count != 2 {
 		return "", fmt.Errorf("an incredible number of operands, %w", errorNotTwoOperands)
 	}
@@ -55,7 +56,7 @@ func StringSum(input string) (output string, err error) {
 }
 
 // func main() {
-// 	a := "55"
+// 	a := "-55+-33"
 // 	fmt.Println(StringSum(a))
 // 	fmt.Println(a)
 // }
